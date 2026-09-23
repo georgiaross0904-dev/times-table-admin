@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <title>Times Table Practice</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main id="app" class="app" aria-live="polite">
+    <section id="setupScreen" class="setup-screen">
+      <div class="brand-row">
+        <img src="assets/icon-64.png" alt="" class="brand-icon" />
+        <div>
+          <h1>Times Table Practice</h1>
+          <p class="subtitle">Automatic classroom practice</p>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <fieldset>
+          <legend>Questions</legend>
+          <label><input type="radio" name="mode" value="mixed" checked /> Multiplication + division</label>
+          <label><input type="radio" name="mode" value="multiply" /> Multiplication only</label>
+          <label><input type="radio" name="mode" value="divide" /> Division only</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Timing</legend>
+          <label class="select-row">Question
+            <select id="questionSeconds" aria-label="Question time">
+              <option value="3">3 seconds</option>
+              <option value="4">4 seconds</option>
+              <option value="5" selected>5 seconds</option>
+              <option value="6">6 seconds</option>
+              <option value="7">7 seconds</option>
+            </select>
+          </label>
+          <label class="select-row">Answer
+            <select id="answerSeconds" aria-label="Answer display time">
+              <option value="1">1 second</option>
+              <option value="2" selected>2 seconds</option>
+              <option value="3">3 seconds</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Duration</legend>
+          <label class="select-row">Session
+            <select id="durationMinutes" aria-label="Session duration">
+              <option value="10">10 minutes</option>
+              <option value="15">15 minutes</option>
+              <option value="20">20 minutes</option>
+              <option value="30">30 minutes</option>
+              <option value="0" selected>Unlimited</option>
+            </select>
+          </label>
+        </fieldset>
+      </div>
+
+      <button id="startButton" class="primary-button" type="button" disabled>Loading…</button>
+      <p id="runtimeStatus" class="runtime-status" role="status">Starting PowerPoint add-in…</p>
+      <p class="hint">After Start, questions advance automatically. Pupils do not need to click or type.</p>
+    </section>
+
+    <section id="quizScreen" class="quiz-screen" hidden>
+      <header class="quiz-header">
+        <div>
+          <span class="meta-label">Status</span>
+          <strong id="statusText">Running</strong>
+        </div>
+        <div class="time-block">
+          <span class="meta-label">Time remaining</span>
+          <strong id="timeRemaining">Unlimited</strong>
+        </div>
+      </header>
+
+      <div class="question-stage">
+        <div id="questionText" class="question-text">8 × 7 = ?</div>
+        <div id="answerText" class="answer-text" aria-live="assertive"></div>
+        <div id="phaseCountdown" class="phase-countdown" aria-hidden="true"></div>
+      </div>
+
+      <footer class="quiz-controls">
+        <button id="pauseButton" class="secondary-button" type="button">Pause</button>
+        <button id="resetButton" class="secondary-button" type="button">Reset</button>
+      </footer>
+    </section>
+  </main>
+
+  <script src="js/quiz-core.js"></script>
+  <script src="js/content.js"></script>
+</body>
+</html>
