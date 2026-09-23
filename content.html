@@ -5,18 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
   <title>Times Table Practice</title>
-  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    :root { font-family: Aptos, "Segoe UI", Arial, sans-serif; color:#fff; background:#0b1f33; font-synthesis:none; }
+    * { box-sizing:border-box; }
+    html,body { width:100%; height:100%; margin:0; overflow:hidden; }
+    body { background:#0b1f33; }
+    button,select,input { font:inherit; }
+    .app { width:100%; height:100%; min-height:320px; background:radial-gradient(circle at top left,#173e63 0,#0b1f33 58%,#071523 100%); }
+    .setup-screen { height:100%; display:flex; flex-direction:column; justify-content:center; gap:clamp(12px,2vh,24px); padding:clamp(22px,4vw,56px); }
+    .brand-row { display:flex; align-items:center; gap:16px; }
+    .brand-mark { width:clamp(44px,6vw,70px); height:clamp(44px,6vw,70px); border-radius:18px; display:grid; place-items:center; background:#ffd84d; color:#102033; font-weight:900; font-size:clamp(22px,3vw,34px); box-shadow:0 0 0 3px rgba(255,255,255,.15) inset; }
+    h1 { margin:0; font-size:clamp(30px,5vw,58px); line-height:1; }
+    .subtitle { margin:8px 0 0; font-size:clamp(15px,2vw,23px); color:#cbd9e6; }
+    .settings-grid { display:grid; grid-template-columns:1.25fr 1fr .9fr; gap:clamp(12px,2vw,24px); }
+    fieldset { min-width:0; border:2px solid #55758e; border-radius:16px; padding:16px 18px; background:rgba(255,255,255,.06); }
+    legend { padding:0 8px; font-weight:800; font-size:clamp(16px,2vw,23px); }
+    fieldset>label { display:flex; align-items:center; gap:10px; margin:10px 0; font-size:clamp(14px,1.7vw,20px); }
+    input[type="radio"] { width:1.15em; height:1.15em; accent-color:#ffd84d; }
+    .select-row { justify-content:space-between; }
+    select { min-width:118px; border:1px solid #96afc4; border-radius:9px; padding:7px 9px; color:#10283e; background:#fff; font-weight:700; }
+    .primary-button,.secondary-button { border:0; border-radius:12px; cursor:pointer; font-weight:800; }
+    .primary-button { align-self:flex-start; min-width:180px; padding:13px 30px; font-size:clamp(19px,2.5vw,28px); background:#ffd84d; color:#102033; box-shadow:0 5px 0 #a98500; }
+    .primary-button:active { transform:translateY(2px); box-shadow:0 3px 0 #a98500; }
+    .runtime-status { margin:-4px 0 0; color:#9fe3b1; font-size:clamp(12px,1.4vw,16px); font-weight:700; }
+    .runtime-status.is-error { color:#ffb3b3; }
+    .hint { margin:0; color:#cbd9e6; font-size:clamp(12px,1.5vw,17px); }
+    .setup-screen[hidden],.quiz-screen[hidden] { display:none!important; }
+    .quiz-screen { height:100%; display:grid; grid-template-rows:auto 1fr auto; padding:clamp(18px,3vw,38px); }
+    .quiz-header { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; font-size:clamp(15px,2vw,22px); }
+    .quiz-header>div { display:flex; flex-direction:column; gap:3px; }
+    .time-block { text-align:right; }
+    .meta-label { color:#a9c0d3; font-size:.72em; text-transform:uppercase; letter-spacing:.08em; font-weight:800; }
+    .question-stage { display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height:0; position:relative; }
+    .question-text { font-size:clamp(64px,12vw,150px); line-height:.98; font-weight:900; letter-spacing:-.045em; }
+    .answer-text { min-height:1.25em; margin-top:clamp(18px,4vh,40px); font-size:clamp(34px,6vw,76px); line-height:1; font-weight:900; color:#ffd84d; }
+    .phase-countdown { margin-top:12px; color:#9fb6c9; font-size:clamp(13px,1.7vw,20px); font-variant-numeric:tabular-nums; }
+    .quiz-controls { display:flex; justify-content:center; gap:12px; }
+    .secondary-button { min-width:112px; padding:9px 20px; font-size:clamp(15px,1.8vw,20px); background:rgba(255,255,255,.13); color:#fff; border:1px solid #66839b; }
+    .secondary-button:hover { background:rgba(255,255,255,.2); }
+    .app.is-paused .question-stage { opacity:.55; }
+    .app.is-paused .question-stage::after { content:"PAUSED"; position:absolute; font-size:clamp(30px,6vw,72px); font-weight:900; color:#ffd84d; background:#0b1f33; padding:12px 24px; border-radius:14px; }
+    .app.is-ended .question-text { font-size:clamp(46px,8vw,100px); }
+    @media (max-width:700px),(max-height:430px) { .settings-grid { grid-template-columns:1fr 1fr; } .settings-grid fieldset:last-child { grid-column:1/-1; } .setup-screen { justify-content:flex-start; overflow:auto; } }
+  </style>
 </head>
 <body>
   <main id="app" class="app" aria-live="polite">
     <section id="setupScreen" class="setup-screen">
       <div class="brand-row">
-        <img src="assets/icon-64.png" alt="" class="brand-icon" />
-        <div>
-          <h1>Times Table Practice</h1>
-          <p class="subtitle">Automatic classroom practice</p>
-        </div>
+        <div class="brand-mark" aria-hidden="true">×÷</div>
+        <div><h1>Times Table Practice</h1><p class="subtitle">Automatic classroom practice</p></div>
       </div>
 
       <div class="settings-grid">
@@ -26,72 +64,224 @@
           <label><input type="radio" name="mode" value="multiply" /> Multiplication only</label>
           <label><input type="radio" name="mode" value="divide" /> Division only</label>
         </fieldset>
-
         <fieldset>
           <legend>Timing</legend>
-          <label class="select-row">Question
-            <select id="questionSeconds" aria-label="Question time">
-              <option value="3">3 seconds</option>
-              <option value="4">4 seconds</option>
-              <option value="5" selected>5 seconds</option>
-              <option value="6">6 seconds</option>
-              <option value="7">7 seconds</option>
-            </select>
-          </label>
-          <label class="select-row">Answer
-            <select id="answerSeconds" aria-label="Answer display time">
-              <option value="1">1 second</option>
-              <option value="2" selected>2 seconds</option>
-              <option value="3">3 seconds</option>
-            </select>
-          </label>
+          <label class="select-row">Question<select id="questionSeconds" aria-label="Question time"><option value="3">3 seconds</option><option value="4">4 seconds</option><option value="5" selected>5 seconds</option><option value="6">6 seconds</option><option value="7">7 seconds</option></select></label>
+          <label class="select-row">Answer<select id="answerSeconds" aria-label="Answer display time"><option value="1">1 second</option><option value="2" selected>2 seconds</option><option value="3">3 seconds</option></select></label>
         </fieldset>
-
         <fieldset>
           <legend>Duration</legend>
-          <label class="select-row">Session
-            <select id="durationMinutes" aria-label="Session duration">
-              <option value="10">10 minutes</option>
-              <option value="15">15 minutes</option>
-              <option value="20">20 minutes</option>
-              <option value="30">30 minutes</option>
-              <option value="0" selected>Unlimited</option>
-            </select>
-          </label>
+          <label class="select-row">Session<select id="durationMinutes" aria-label="Session duration"><option value="10">10 minutes</option><option value="15">15 minutes</option><option value="20">20 minutes</option><option value="30">30 minutes</option><option value="0" selected>Unlimited</option></select></label>
         </fieldset>
       </div>
 
-      <button id="startButton" class="primary-button" type="button" disabled>Loading…</button>
-      <p id="runtimeStatus" class="runtime-status" role="status">Starting PowerPoint add-in…</p>
+      <button id="startButton" class="primary-button" type="button">Start</button>
+      <p id="runtimeStatus" class="runtime-status" role="status">Ready</p>
       <p class="hint">After Start, questions advance automatically. Pupils do not need to click or type.</p>
     </section>
 
     <section id="quizScreen" class="quiz-screen" hidden>
       <header class="quiz-header">
-        <div>
-          <span class="meta-label">Status</span>
-          <strong id="statusText">Running</strong>
-        </div>
-        <div class="time-block">
-          <span class="meta-label">Time remaining</span>
-          <strong id="timeRemaining">Unlimited</strong>
-        </div>
+        <div><span class="meta-label">Status</span><strong id="statusText">Running</strong></div>
+        <div class="time-block"><span class="meta-label">Time remaining</span><strong id="timeRemaining">Unlimited</strong></div>
       </header>
-
       <div class="question-stage">
         <div id="questionText" class="question-text">8 × 7 = ?</div>
         <div id="answerText" class="answer-text" aria-live="assertive"></div>
         <div id="phaseCountdown" class="phase-countdown" aria-hidden="true"></div>
       </div>
-
-      <footer class="quiz-controls">
-        <button id="pauseButton" class="secondary-button" type="button">Pause</button>
-        <button id="resetButton" class="secondary-button" type="button">Reset</button>
-      </footer>
+      <footer class="quiz-controls"><button id="pauseButton" class="secondary-button" type="button">Pause</button><button id="resetButton" class="secondary-button" type="button">Reset</button></footer>
     </section>
   </main>
 
-  <script src="js/quiz-core.js"></script>
-  <script src="js/content.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var app = document.getElementById('app');
+    var setupScreen = document.getElementById('setupScreen');
+    var quizScreen = document.getElementById('quizScreen');
+    var startButton = document.getElementById('startButton');
+    var pauseButton = document.getElementById('pauseButton');
+    var resetButton = document.getElementById('resetButton');
+    var questionSeconds = document.getElementById('questionSeconds');
+    var answerSeconds = document.getElementById('answerSeconds');
+    var durationMinutes = document.getElementById('durationMinutes');
+    var questionText = document.getElementById('questionText');
+    var answerText = document.getElementById('answerText');
+    var statusText = document.getElementById('statusText');
+    var timeRemaining = document.getElementById('timeRemaining');
+    var phaseCountdown = document.getElementById('phaseCountdown');
+    var runtimeStatus = document.getElementById('runtimeStatus');
+
+    var state = null;
+    var timerId = null;
+
+    function selectedMode() {
+      var selected = document.querySelector('input[name="mode"]:checked');
+      return selected ? selected.value : 'mixed';
+    }
+
+    function integerBetween(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    function multiplicationQuestion() {
+      var left = integerBetween(0, 12);
+      var right = integerBetween(0, 12);
+      return { type:'multiply', answer:left * right, text:left + ' × ' + right + ' = ?', answerText:'Answer: ' + (left * right), key:'m:' + left + ':' + right };
+    }
+
+    function divisionQuestion() {
+      var divisor = integerBetween(1, 12);
+      var quotient = integerBetween(0, 12);
+      var dividend = divisor * quotient;
+      return { type:'divide', answer:quotient, text:dividend + ' ÷ ' + divisor + ' = ?', answerText:'Answer: ' + quotient, key:'d:' + dividend + ':' + divisor };
+    }
+
+    function generateQuestion(mode, previousKey) {
+      var q;
+      for (var i = 0; i < 12; i += 1) {
+        if (mode === 'multiply') q = multiplicationQuestion();
+        else if (mode === 'divide') q = divisionQuestion();
+        else q = Math.random() < 0.5 ? multiplicationQuestion() : divisionQuestion();
+        if (q.key !== previousKey) return q;
+      }
+      return q;
+    }
+
+    function durationToMs(minutes) {
+      var value = Number(minutes);
+      return (!isFinite(value) || value <= 0) ? null : value * 60 * 1000;
+    }
+
+    function formatRemaining(ms) {
+      if (ms === null) return 'Unlimited';
+      var safe = Math.max(0, Math.ceil(ms / 1000));
+      var mins = Math.floor(safe / 60);
+      var secs = safe % 60;
+      return mins + ':' + String(secs).padStart(2, '0');
+    }
+
+    function nowMs() { return (window.performance && typeof window.performance.now === 'function') ? window.performance.now() : Date.now(); }
+
+    function newState() {
+      var durationMs = durationToMs(durationMinutes.value);
+      return { mode:selectedMode(), questionMs:Number(questionSeconds.value)*1000, answerMs:Number(answerSeconds.value)*1000, durationMs:durationMs, sessionRemainingMs:durationMs, phase:'question', phaseRemainingMs:Number(questionSeconds.value)*1000, currentQuestion:null, previousKey:null, paused:false, ended:false, lastTickAt:nowMs() };
+    }
+
+    function render() {
+      if (!state) return;
+      statusText.textContent = state.ended ? 'Complete' : state.paused ? 'Paused' : (state.phase === 'answer' ? 'Answer' : 'Question');
+      timeRemaining.textContent = formatRemaining(state.sessionRemainingMs);
+      phaseCountdown.textContent = state.ended ? '' : Math.max(0, state.phaseRemainingMs / 1000).toFixed(1) + 's';
+      pauseButton.textContent = state.ended ? 'Restart' : state.paused ? 'Resume' : 'Pause';
+    }
+
+    function showNewQuestion() {
+      state.currentQuestion = generateQuestion(state.mode, state.previousKey);
+      state.previousKey = state.currentQuestion.key;
+      state.phase = 'question';
+      state.phaseRemainingMs = state.questionMs;
+      questionText.textContent = state.currentQuestion.text;
+      answerText.textContent = '';
+      render();
+    }
+
+    function revealAnswer() {
+      state.phase = 'answer';
+      state.phaseRemainingMs = state.answerMs;
+      answerText.textContent = state.currentQuestion.answerText;
+      render();
+    }
+
+    function stopTimer() { if (timerId !== null) { window.clearInterval(timerId); timerId = null; } }
+
+    function endSession() {
+      state.ended = true;
+      state.paused = false;
+      app.classList.remove('is-paused');
+      app.classList.add('is-ended');
+      statusText.textContent = 'Complete';
+      timeRemaining.textContent = '0:00';
+      questionText.textContent = 'Session complete';
+      answerText.textContent = '';
+      phaseCountdown.textContent = '';
+      pauseButton.textContent = 'Restart';
+      stopTimer();
+    }
+
+    function consumeElapsed(elapsed) {
+      if (!state || state.paused || state.ended) return;
+      if (state.sessionRemainingMs !== null) {
+        state.sessionRemainingMs -= elapsed;
+        if (state.sessionRemainingMs <= 0) { state.sessionRemainingMs = 0; endSession(); return; }
+      }
+      var remainingElapsed = elapsed;
+      while (remainingElapsed >= state.phaseRemainingMs && !state.ended) {
+        remainingElapsed -= state.phaseRemainingMs;
+        if (state.phase === 'question') revealAnswer(); else showNewQuestion();
+      }
+      state.phaseRemainingMs -= remainingElapsed;
+    }
+
+    function tick() {
+      if (!state) return;
+      var now = nowMs();
+      var elapsed = Math.max(0, now - state.lastTickAt);
+      state.lastTickAt = now;
+      consumeElapsed(elapsed);
+      render();
+    }
+
+    function startTimer() { stopTimer(); state.lastTickAt = nowMs(); timerId = window.setInterval(tick, 100); }
+
+    function startQuiz() {
+      try {
+        state = newState();
+        app.classList.remove('is-paused','is-ended');
+        setupScreen.hidden = true;
+        quizScreen.hidden = false;
+        runtimeStatus.textContent = 'Ready';
+        runtimeStatus.className = 'runtime-status';
+        showNewQuestion();
+        startTimer();
+      } catch (error) {
+        setupScreen.hidden = false;
+        quizScreen.hidden = true;
+        runtimeStatus.textContent = 'Could not start: ' + (error && error.message ? error.message : String(error));
+        runtimeStatus.className = 'runtime-status is-error';
+      }
+    }
+
+    function togglePause() {
+      if (!state) return;
+      if (state.ended) { startQuiz(); return; }
+      state.paused = !state.paused;
+      app.classList.toggle('is-paused', state.paused);
+      state.lastTickAt = nowMs();
+      render();
+    }
+
+    function resetQuiz() {
+      stopTimer();
+      state = null;
+      app.classList.remove('is-paused','is-ended');
+      quizScreen.hidden = true;
+      setupScreen.hidden = false;
+      questionText.textContent = '8 × 7 = ?';
+      answerText.textContent = '';
+      runtimeStatus.textContent = 'Ready';
+      runtimeStatus.className = 'runtime-status';
+    }
+
+    startButton.addEventListener('click', startQuiz);
+    pauseButton.addEventListener('click', togglePause);
+    resetButton.addEventListener('click', resetQuiz);
+
+    window.addEventListener('error', function (event) {
+      runtimeStatus.textContent = 'Script error: ' + event.message;
+      runtimeStatus.className = 'runtime-status is-error';
+    });
+  })();
+  </script>
 </body>
 </html>
